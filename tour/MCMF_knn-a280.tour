@@ -1,7 +1,7 @@
 NAME : a280
 COMMENT : Algorithm MCMF_knn
 COMMENT : Length 3117 
-COMMENT : Elapsed time 0.0236165 seconds
+COMMENT : Elapsed time 0.0130085 seconds
 TYPE : TOUR
 DIMENSION : 280
 TOUR_SECTION

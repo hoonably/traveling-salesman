@@ -1,4 +1,4 @@
-#define ALGO "MCMF_plain"
+#define ALGO "MCMF_greedy"
 
 #include <bits/stdc++.h>
 using namespace std;
