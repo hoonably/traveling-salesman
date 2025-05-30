@@ -1,7 +1,7 @@
 NAME : a280
 COMMENT : Algorithm Greedy
 COMMENT : Length 3157 
-COMMENT : Elapsed time 0.00157362 seconds
+COMMENT : Elapsed time 0.000631083 seconds
 TYPE : TOUR
 DIMENSION : 280
 TOUR_SECTION
