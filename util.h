@@ -93,6 +93,6 @@ void save(string filename, vector<int>& tour, int total_length, chrono::duration
     
     // 결과 터미널에 출력
     cout << "Filename: " << filename << endl;
-    cout << "Final tour length (after stitching): " << total_length << endl;
+    cout << "Final tour length : " << total_length << endl;
     cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
 }
