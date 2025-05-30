@@ -1,64 +1,5 @@
-#define ALGO "MCMF_greedy"
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <cmath>
-#include <string>
-#include <chrono>
-#include <algorithm>
-#include <queue>
-using namespace std;
-
-const int INF = 0x3f3f3f3f;
-const int MAX_N = INF; // 메모리 초과 방지용 상한
-
-struct City {
-    double x, y;
-};
-
-vector<City> cities;
-int n;
-
-vector<vector<int>> dist;
-
-bool loadTSPFile(const string& filename) {
-    ifstream infile("dataset/" + filename);
-    if (!infile) {
-        cerr << "파일 열기 실패: " << filename << endl;
-        exit(1);
-    }
-
-    string line;
-    while (getline(infile, line)) {
-        if (line.find("DIMENSION") != string::npos)
-            n = stoi(line.substr(line.find(":") + 1));
-        if (line == "NODE_COORD_SECTION") break;
-    }
-
-    if (n > MAX_N){
-        infile.close();
-        return false; // 파일 크기가 너무 큼 -> memory 초과 방지
-    }
-
-    cities.resize(n + 1);
-    for (int i = 1; i <= n; ++i) {
-        int id;
-        double x, y;
-        infile >> id >> x >> y;
-        cities[id] = {x, y};
-    }
-    infile.close();
-    // 거리 행렬 전처리
-    dist.assign(n + 1, vector<int>(n + 1, 0));
-    for (int i = 1; i <= n; ++i)
-        for (int j = 1; j <= n; ++j) {
-            double dx = cities[i].x - cities[j].x;
-            double dy = cities[i].y - cities[j].y;
-            dist[i][j] = static_cast<int>(round(sqrt(dx * dx + dy * dy)));
-        }
-    return true;
-}
+#define ALGO "MCMF_knn_2opt"
+#include "util.h"
 
 struct MCMF {
     using CostType = int;
@@ -82,8 +23,8 @@ struct MCMF {
         vertexSZ = 2 * (n + 1);
         SZ = vertexSZ + 10;
         bias = n + 1;
-        SRC = vertexSZ - 2;
-        SINK = vertexSZ - 1;
+        SRC = vertexSZ - 2;  // 2n
+        SINK = vertexSZ - 1;  // 2n + 1
 
         graph.assign(SZ, {});
         inQ.assign(SZ, false);
@@ -152,33 +93,36 @@ struct MCMF {
     }
 };
 
-int computeCost(vector<int>& tour) {
-    int cost = 0;
-    for (int i = 0; i < tour.size() - 1; ++i)
-        cost += dist[tour[i]][tour[i + 1]];
-    return cost;
+// Get K-Nearest Neighbors for each city
+vector<vector<int>> get_knn(int k) {
+    vector<vector<int>> knn(n + 1);
+    for (int i = 1; i <= n; ++i) {
+        vector<pair<int, int>> distances; // {distance, city}
+        for (int j = 1; j <= n; ++j) {
+            if (i != j) {
+                distances.push_back({dist[i][j], j});
+            }
+        }
+        sort(distances.begin(), distances.end());
+        for (int j = 0; j < min(k, (int)distances.size()); ++j) {
+            knn[i].push_back(distances[j].second);
+        }
+    }
+    return knn;
 }
 
-int main() {
-    vector<string> filenames = {
-        "a280.tsp", "xql662.tsp", "kz9976.tsp", "mona-lisa100K.tsp"
-    };
+// MCMF tour construction using KNN
+vector<int> MCMF_tour(){
 
-    for (const string& filename : filenames) {
-        if (!loadTSPFile(filename)){
-            cout << "Skipping " << filename << " due to large size: " << n << " cities.\n";
-            continue;
-        }
-
-        auto start = chrono::high_resolution_clock::now();
+        vector<vector<int>> knn = get_knn(K);
 
         MCMF mcmf;
         mcmf.init(n);
+        // 간선 추가
         for (int i = 1; i <= n; ++i) {
             mcmf.addEdge(mcmf.SRC, i, 1, 0);
             mcmf.addEdge(i + mcmf.bias, mcmf.SINK, 1, 0);
-            for (int j = 1; j <= n; ++j) {
-                if (i == j) continue;
+            for (int j : knn[i]) {
                 mcmf.addEdge(i, j + mcmf.bias, 1, dist[i][j]);
             }
         }
@@ -233,31 +177,52 @@ int main() {
             }
         }
 
-        vector<int> tour = subtours[0];
-        int total_length = computeCost(tour);
+        return subtours[0];
+}
+
+// 2-opt optimization
+void apply_2_opt(vector<int>& tour) {
+    bool improved=true;
+    while(improved) {
+        improved=false;
+        int m=tour.size();
+        for(int i=0;i<m-2 && !improved;++i){
+            for(int k=i+2;k<m-1;++k){
+                int a=tour[i], b=tour[i+1], c=tour[k], d=tour[k+1];
+                int before=dist[a][b]+dist[c][d];
+                int after=dist[a][c]+dist[b][d];
+                if(after<before){ reverse(tour.begin()+i+1, tour.begin()+k+1); improved=true; break; }
+            }
+        }
+    }
+}
+
+// Compute the total cost of the tour
+int computeCost(vector<int>& tour) {
+    int cost = 0;
+    for (int i = 0; i < tour.size() - 1; ++i)
+        cost += dist[tour[i]][tour[i + 1]];
+    return cost;
+}
+
+int main() {
+    for (const string& filename : filenames) {
+        if (!loadTSPFile(filename)){
+            cout << "Skipping " << filename << " due to large size: " << n << " cities.\n";
+            continue;
+        }
+
+        auto start = chrono::high_resolution_clock::now();
+
+        vector<int> tour = MCMF_tour();
+        apply_2_opt(tour);
+        int total_length=computeCost(tour);
 
         auto end = chrono::high_resolution_clock::now();
         chrono::duration<double> elapsed = end - start;
 
         // file에 tour 결과 저장
-        string basename = filename.substr(0, filename.find(".tsp"));
-        string outname = "tour/" + string(ALGO) + "-" + basename + ".tour";
-        ofstream out(outname);
-        out << "NAME : " << basename << "\n";
-        out << "COMMENT : Algorithm " + string(ALGO) + "\n";
-        out << "COMMENT : Length " << total_length << " \n";
-        out << "COMMENT : Elapsed time " << elapsed.count() << " seconds\n";
-        out << "TYPE : TOUR\n";
-        out << "DIMENSION : " << n << "\n";
-        out << "TOUR_SECTION\n";
-        for (int node : tour) out << node << "\n";
-        out << "EOF\n";
-        out.close();
-        
-        // 결과 터미널에 출력
-        cout << "Filename: " << filename << endl;
-        cout << "Final tour length (after stitching): " << total_length << endl;
-        cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
+        save(filename, tour, total_length, elapsed);
     }
     return 0;
 }

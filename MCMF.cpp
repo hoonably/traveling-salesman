@@ -1,4 +1,4 @@
-#define ALGO "MCMF_knn"
+#define ALGO "MCMF"
 #include "util.h"
 
 struct MCMF {
@@ -113,16 +113,14 @@ vector<vector<int>> get_knn(int k) {
 
 // MCMF tour construction using KNN
 vector<int> MCMF_tour(){
-
-        vector<vector<int>> knn = get_knn(K);
-
         MCMF mcmf;
         mcmf.init(n);
         // 간선 추가
         for (int i = 1; i <= n; ++i) {
             mcmf.addEdge(mcmf.SRC, i, 1, 0);
             mcmf.addEdge(i + mcmf.bias, mcmf.SINK, 1, 0);
-            for (int j : knn[i]) {
+            for (int j = 1; j <= n; ++j) {
+                if (i == j) continue;
                 mcmf.addEdge(i, j + mcmf.bias, 1, dist[i][j]);
             }
         }
