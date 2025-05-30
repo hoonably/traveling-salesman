@@ -15,7 +15,7 @@ using namespace std;
 vector<string> filenames = {
     "a280.tsp", 
     "xql662.tsp", 
-    // "kz9976.tsp", 
+    "kz9976.tsp", 
     // "mona_lisa100K.tsp"
 };
 

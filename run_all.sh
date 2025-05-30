@@ -17,9 +17,6 @@ CPP_FILES=(
   "MST_CLRS_2opt.cpp"
 )
 
-# TSP 데이터셋 목록
-DATASETS=("a280.tsp" "xql662.tsp")  # 필요에 따라 추가
-
 # C++ 컴파일 및 실행
 for file in "${CPP_FILES[@]}"; do
   echo "======== Compiling $file ========"
@@ -29,10 +26,7 @@ for file in "${CPP_FILES[@]}"; do
     continue
   fi
 
-  for dataset in "${DATASETS[@]}"; do
-    echo "---- Running $file with dataset $dataset ----"
-    ./$OUTPUT_NAME "dataset/$dataset"
-  done
+  ./$OUTPUT_NAME "dataset/$dataset"
 
   rm -f $OUTPUT_NAME
 done
