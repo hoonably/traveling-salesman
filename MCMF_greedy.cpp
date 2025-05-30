@@ -4,7 +4,7 @@
 using namespace std;
 
 const int INF = 0x3f3f3f3f;
-const int MAX_N = 1000; // 메모리 초과 방지용 상한
+const int MAX_N = INF; // 메모리 초과 방지용 상한
 
 struct City {
     double x, y;
