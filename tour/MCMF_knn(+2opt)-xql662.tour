@@ -1,7 +1,7 @@
 NAME : xql662
-COMMENT : Algorithm MCMF_knn_2opt
+COMMENT : Algorithm MCMF_knn(+2opt)
 COMMENT : Length 2713 
-COMMENT : Elapsed time 0.0552265 seconds
+COMMENT : Elapsed time 0.030601 seconds
 TYPE : TOUR
 DIMENSION : 662
 TOUR_SECTION

@@ -8,13 +8,9 @@ OUTPUT_NAME=temp_exec
 # C++ 소스 목록
 CPP_FILES=(
   "Greedy.cpp"
-  "Greedy-2opt.cpp"
   "MCMF.cpp"
-  "MCMF_2opt.cpp"
   "MCMF_knn.cpp"
-  "MCMF_knn_2opt.cpp"
   "MST_CLRS.cpp"
-  "MST_CLRS_2opt.cpp"
 )
 
 # C++ 컴파일 및 실행

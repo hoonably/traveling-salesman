@@ -1,7 +1,7 @@
 NAME : xql662
-COMMENT : Algorithm Greedy_2opt
+COMMENT : Algorithm Greedy(+2opt)
 COMMENT : Length 2693 
-COMMENT : Elapsed time 0.0159761 seconds
+COMMENT : Elapsed time 0.029378 seconds
 TYPE : TOUR
 DIMENSION : 662
 TOUR_SECTION
