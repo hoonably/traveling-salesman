@@ -1,5 +1,6 @@
-NAME : mona-lisa100K_5757191.txt
-COMMENT : Length 5757191, Found by Genetic algorithm (Yuichi Nagata)
+NAME : mona_lisa100K
+COMMENT : OPT
+COMMENT : Length 5757191
 TYPE : TOUR
 DIMENSION : 100000
 TOUR_SECTION
