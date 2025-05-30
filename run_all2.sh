@@ -15,14 +15,11 @@ CPP_FILES=(
 
 # C++ 컴파일 및 실행
 for file in "${CPP_FILES[@]}"; do
-  echo "======== Processing $file ========"
 
-  TEMP_FILE="temp_$file"
-  
   # "util.h" → "util2.h" 로 변경하여 임시 파일 생성
+  TEMP_FILE="temp_$file"
   sed 's/#include "util\.h"/#include "util2.h"/' "$file" > "$TEMP_FILE"
 
-  # 컴파일
   $CXX $CXXFLAGS "$TEMP_FILE" -o $OUTPUT_NAME -lm
   if [ $? -ne 0 ]; then
     echo "❌ Compilation failed for $file"
@@ -30,7 +27,7 @@ for file in "${CPP_FILES[@]}"; do
     continue
   fi
 
-  # 실행
+  echo "======== Processing $file ========"
   ./$OUTPUT_NAME "dataset/$dataset"
 
   # 임시 파일 및 실행 파일 삭제

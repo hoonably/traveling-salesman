@@ -1,7 +1,7 @@
 #define ALGO "Greedy"
 #include "util.h"
 
-// 전통적인 Greedy(Nearest-Neighbor) TSP 구현
+// 전통적인 Greedy TSP
 vector<int> greedy() {
     vector<int> tour;
     vector<bool> visited(n + 1, false);

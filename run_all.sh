@@ -15,13 +15,13 @@ CPP_FILES=(
 
 # C++ 컴파일 및 실행
 for file in "${CPP_FILES[@]}"; do
-  echo "======== Compiling $file ========"
   $CXX $CXXFLAGS "$file" -o $OUTPUT_NAME -lm
   if [ $? -ne 0 ]; then
     echo "❌ Compilation failed for $file"
     continue
   fi
 
+  echo "======== Processing $file ========"
   ./$OUTPUT_NAME "dataset/$dataset"
 
   rm -f $OUTPUT_NAME

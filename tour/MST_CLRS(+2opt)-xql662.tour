@@ -1,7 +1,7 @@
 NAME : xql662
 COMMENT : Algorithm MST_CLRS(+2opt)
 COMMENT : Length 2767 
-COMMENT : Elapsed time 0.058491 seconds
+COMMENT : Elapsed time 0.036868 seconds
 TYPE : TOUR
 DIMENSION : 662
 TOUR_SECTION
