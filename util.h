@@ -19,7 +19,7 @@ using namespace std;
 vector<string> filenames = {
     "a280.tsp", 
     "xql662.tsp", 
-    // "kz9976.tsp", 
+    "kz9976.tsp", 
 };
 
 struct City {
@@ -32,10 +32,10 @@ int K = 20;
 vector<City> cities;
 vector<vector<int>> dist;
 
+//! You should use O2 optimization flag when compiling this file.
+// Then it replaces the get_dist(i, j) function with dist[i][j] to save time.
 int get_dist(int i, int j) {
-    double dx = cities[i].x - cities[j].x;
-    double dy = cities[i].y - cities[j].y;
-    return static_cast<int>(round(sqrt(dx * dx + dy * dy)));
+    return dist[i][j];
 }
 
 int computeCost(vector<int>& tour) {

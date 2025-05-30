@@ -103,7 +103,7 @@ vector<int> MCMF_tour(){
             mcmf.addEdge(i + mcmf.bias, mcmf.SINK, 1, 0);
             for (int j = 1; j <= n; ++j) {
                 if (i == j) continue;
-                mcmf.addEdge(i, j + mcmf.bias, 1, dist[i][j]);
+                mcmf.addEdge(i, j + mcmf.bias, 1, get_dist(i,j));
             }
         }
         auto result = mcmf.run();
@@ -141,7 +141,7 @@ vector<int> MCMF_tour(){
                     if (i == j) continue;
                     int tail = subtours[i].back();
                     int head = subtours[j].front();
-                    int cost = dist[tail][head];
+                    int cost = get_dist(tail,head);
                     if (cost < best_cost) {
                         best_cost = cost;
                         best_i = i;

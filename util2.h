@@ -8,6 +8,7 @@
 #include <chrono>
 #include <algorithm>
 #include <queue>
+#include <iomanip>
 
 using namespace std;
 #define INF 0x3f3f3f3f
@@ -23,11 +24,13 @@ struct City {
     double x, y;
 };
 
-const int MAX_N = INF;  // for depend vector size
+const int MAX_N = INF;
 int n;
 int K = 20;
 vector<City> cities;
+// vector<vector<int>> dist;
 
+// Every time get_dist(i, j) is called, it calculates the distance between cities[i] and cities[j]
 int get_dist(int i, int j) {
     double dx = cities[i].x - cities[j].x;
     double dy = cities[i].y - cities[j].y;
@@ -71,6 +74,8 @@ void save(string filename, string algo, vector<int>& tour, int total_length, chr
     string basename = filename.substr(0, filename.find(".tsp"));
     string outname = "tour/" + algo + "-" + basename + ".tour";
     ofstream out(outname);
+
+    out << fixed << setprecision(6);  // 소수점 6자리까지 고정 소수점 출력
     out << "NAME : " << basename << "\n";
     out << "COMMENT : Algorithm " + algo + "\n";
     out << "COMMENT : Length " << total_length << " \n";
@@ -81,9 +86,4 @@ void save(string filename, string algo, vector<int>& tour, int total_length, chr
     for (int node : tour) out << node << "\n";
     out << "EOF\n";
     out.close();
-    
-    // 결과 터미널에 출력
-    cout << "Filename: " << filename << endl;
-    cout << "Final tour length : " << total_length << endl;
-    cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
 }

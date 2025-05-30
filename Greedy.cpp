@@ -16,8 +16,9 @@ vector<int> greedy() {
         int next = -1;
         int bestCost = INF;
         for (int j = 1; j <= n; ++j) {
-            if (!visited[j] && dist[cur][j] < bestCost) {
-                bestCost = dist[cur][j];
+            int d = get_dist(cur,j);
+            if (!visited[j] && d < bestCost) {
+                bestCost = d;
                 next = j;
             }
         }

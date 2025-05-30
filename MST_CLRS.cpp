@@ -17,7 +17,7 @@ vector<vector<int>> primMST() {
         inMST[u] = true;
         for (int v = 1; v <= n; ++v) {
             if (!inMST[v]) {
-                int d = dist[u][v];
+                int d = get_dist(u,v);
                 if (d < key[v]) {
                     key[v] = d;
                     parent[v] = u;

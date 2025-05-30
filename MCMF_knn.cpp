@@ -100,7 +100,7 @@ vector<vector<int>> get_knn(int k) {
         vector<pair<int, int>> distances; // {distance, city}
         for (int j = 1; j <= n; ++j) {
             if (i != j) {
-                distances.push_back({dist[i][j], j});
+                distances.push_back({get_dist(i,j), j});
             }
         }
         sort(distances.begin(), distances.end());
@@ -123,7 +123,7 @@ vector<int> MCMF_tour(){
             mcmf.addEdge(mcmf.SRC, i, 1, 0);
             mcmf.addEdge(i + mcmf.bias, mcmf.SINK, 1, 0);
             for (int j : knn[i]) {
-                mcmf.addEdge(i, j + mcmf.bias, 1, dist[i][j]);
+                mcmf.addEdge(i, j + mcmf.bias, 1, get_dist(i,j));
             }
         }
         auto result = mcmf.run();
@@ -161,7 +161,7 @@ vector<int> MCMF_tour(){
                     if (i == j) continue;
                     int tail = subtours[i].back();
                     int head = subtours[j].front();
-                    int cost = dist[tail][head];
+                    int cost = get_dist(tail,head);
                     if (cost < best_cost) {
                         best_cost = cost;
                         best_i = i;
