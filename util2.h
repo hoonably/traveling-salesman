@@ -37,6 +37,30 @@ int get_dist(int i, int j) {
     return static_cast<int>(round(sqrt(dx * dx + dy * dy)));
 }
 
+int computeCost(vector<int>& tour) {
+    int cost = 0;
+    for (int i = 0; i < tour.size() - 1; ++i)
+        cost += get_dist(tour[i],tour[i + 1]);
+    return cost;
+}
+
+// 2-opt optimization
+void apply_2_opt(vector<int>& tour) {
+    bool improved=true;
+    while(improved) {
+        improved=false;
+        int m=tour.size();
+        for(int i=0;i<m-2 && !improved;++i){
+            for(int k=i+2;k<m-1;++k){
+                int a=tour[i], b=tour[i+1], c=tour[k], d=tour[k+1];
+                int before=get_dist(a,b)+get_dist(c,d);
+                int after=get_dist(a,c)+get_dist(b,d);
+                if(after<before){ reverse(tour.begin()+i+1, tour.begin()+k+1); improved=true; break; }
+            }
+        }
+    }
+}
+
 bool loadTSPFile(const string& filename) {
     ifstream infile("dataset/" + filename);
     if (!infile) {
