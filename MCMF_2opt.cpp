@@ -1,4 +1,4 @@
-#define ALGO "MCMF"
+#define ALGO "MCMF_2opt"
 #include "util.h"
 
 struct MCMF {
@@ -160,6 +160,24 @@ vector<int> MCMF_tour(){
         return subtours[0];
 }
 
+// 2-opt optimization
+void apply_2_opt(vector<int>& tour) {
+    bool improved=true;
+    while(improved) {
+        improved=false;
+        int m=tour.size();
+        for(int i=0;i<m-2 && !improved;++i){
+            for(int k=i+2;k<m-1;++k){
+                int a=tour[i], b=tour[i+1], c=tour[k], d=tour[k+1];
+                int before=dist[a][b]+dist[c][d];
+                int after=dist[a][c]+dist[b][d];
+                if(after<before){ reverse(tour.begin()+i+1, tour.begin()+k+1); improved=true; break; }
+            }
+        }
+    }
+}
+
+
 // Compute the total cost of the tour
 int computeCost(vector<int>& tour) {
     int cost = 0;
@@ -178,6 +196,7 @@ int main() {
         auto start = chrono::high_resolution_clock::now();
 
         vector<int> tour = MCMF_tour();
+        apply_2_opt(tour);
         int total_length=computeCost(tour);
 
         auto end = chrono::high_resolution_clock::now();

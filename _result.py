@@ -1,8 +1,7 @@
 import os
 import re
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+from tabulate import tabulate
 
 tour_dir = "tour"
 output_dir = "summary"
@@ -10,6 +9,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 all_data = []
 
+# === STEP 1: .tour 파일 읽기 ===
 for filename in os.listdir(tour_dir):
     if not filename.endswith(".tour"):
         continue
@@ -59,56 +59,31 @@ if not all_data:
     print("No valid data found.")
     exit(1)
 
+# === STEP 2: DataFrame 생성 및 정렬 ===
 df = pd.DataFrame(all_data)
-df.sort_values(by="dimension", inplace=True)
-df["dataset"] = pd.Categorical(df["dataset"], categories=df["dataset"].unique(), ordered=True)
 
-# === 알고리즘 순서 지정: OPT 먼저, 나머지 알파벳 순 ===
+# 알고리즘 순서: OPT 먼저, 나머지 알파벳 순
 algos = sorted(set(row["algorithm"] for row in all_data if row["algorithm"] != "OPT"))
 algo_order = ["OPT"] + algos
 
-# # === 그래프 1: 각 dataset별로 length 그래프 ===
-# for dataset_name in df["dataset"].unique():
-#     sub = df[df["dataset"] == dataset_name].copy()
-#     sub["algorithm"] = pd.Categorical(sub["algorithm"], categories=algo_order, ordered=True)
+# 정렬: dimension > dataset > algorithm (with custom order)
+df.sort_values(
+    by=["dimension", "dataset", "algorithm"],
+    key=lambda x: x if x.name != "algorithm" else pd.Categorical(x, categories=algo_order, ordered=True),
+    inplace=True
+)
 
-#     plt.figure(figsize=(8, 5))
-#     sns.lineplot(data=sub, x="algorithm", y="length", marker="o", linewidth=2)
-#     plt.title(f"{dataset_name} - Tour Length")
-#     plt.ylabel("Tour Length")
-#     plt.xlabel("Algorithm")
-#     plt.xticks(rotation=30)
-#     plt.tight_layout()
-#     plt.savefig(os.path.join(output_dir, f"{dataset_name}_length.png"))
-#     plt.close()
-
-
-# # === 그래프 2: 각 dataset별로 time 그래프 (OPT 제외) ===
-# for dataset_name in df["dataset"].unique():
-#     sub = df[(df["dataset"] == dataset_name) & (df["algorithm"] != "OPT")].copy()
-
-#     # OPT 외에 시간 데이터가 없는 경우 건너뛰기
-#     if sub["time"].isnull().all():
-#         continue
-
-#     sub["algorithm"] = pd.Categorical(sub["algorithm"], categories=algo_order, ordered=True)
-
-#     plt.figure(figsize=(8, 5))
-#     sns.lineplot(data=sub, x="algorithm", y="time", marker="o", linewidth=2)
-#     plt.title(f"{dataset_name} - Execution Time")
-#     plt.ylabel("Time (seconds)")
-#     plt.xlabel("Algorithm")
-#     plt.xticks(rotation=30)
-#     plt.tight_layout()
-#     plt.savefig(os.path.join(output_dir, f"{dataset_name}_time.png"))
-#     plt.close()
-
-from tabulate import tabulate
+# === STEP 3: 포맷 변환 ===
 df["length"] = df["length"].map(lambda x: f"{int(x):d}")
 df["time"] = df["time"].map(lambda x: f"{x:.6f}" if pd.notnull(x) else "")
 df["dimension"] = df["dimension"].map(lambda x: f"{int(x):d}")
-table = tabulate(df, headers='keys', tablefmt='grid', floatfmt=(".0f", ".0f", ".6f", ".0f"), showindex=False)
-with open(output_dir + "/summary_table.md", "w") as f:
+
+# === STEP 4: Markdown 저장 ===
+table = tabulate(df, headers='keys', tablefmt='grid', showindex=False)
+with open(os.path.join(output_dir, "summary_table.md"), "w") as f:
     f.write(table)
 
+# === STEP 5: CSV 저장 ===
 df.to_csv(os.path.join(output_dir, "summary_table.csv"), index=False)
+
+print("[INFO] Markdown and CSV summary tables saved to 'summary/'")
