@@ -1,7 +1,7 @@
 NAME : xql662
 COMMENT : Algorithm MCMF_2opt
 COMMENT : Length 2684 
-COMMENT : Elapsed time 0.115109 seconds
+COMMENT : Elapsed time 0.0884929 seconds
 TYPE : TOUR
 DIMENSION : 662
 TOUR_SECTION

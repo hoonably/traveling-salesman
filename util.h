@@ -16,18 +16,24 @@ vector<string> filenames = {
     "a280.tsp", 
     "xql662.tsp", 
     "kz9976.tsp", 
-    // "mona_lisa100K.tsp"
+    // "mona_lisa100K.tsp",
 };
 
 struct City {
     double x, y;
 };
 
-const int MAX_N = 100000;
+const int MAX_N = INF;  // for depend vector size
 int n;
 int K = 20;
 vector<City> cities;
 vector<vector<int>> dist;
+
+int get_dist(int i, int j) {
+    double dx = cities[i].x - cities[j].x;
+    double dy = cities[i].y - cities[j].y;
+    return static_cast<int>(round(sqrt(dx * dx + dy * dy)));
+}
 
 bool loadTSPFile(const string& filename) {
     ifstream infile("dataset/" + filename);
@@ -59,6 +65,7 @@ bool loadTSPFile(const string& filename) {
     }
     infile.close();
 
+    // 10K 이상의 데이터는 거리 계산시 메모리 초과
     dist.assign(n + 1, vector<int>(n + 1, 0));
     for (int i = 1; i <= n; ++i)
         for (int j = 1; j <= n; ++j) {
