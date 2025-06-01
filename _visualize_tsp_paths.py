@@ -108,3 +108,5 @@ for root, _, files in os.walk(tour_dir):
         os.makedirs(os.path.dirname(output_path), exist_ok=True)  # 폴더 생성
         plt.savefig(output_path, dpi=150)
         plt.close()
+
+print("[INFO] Visualized TSP paths saved to 'tour_image/'")

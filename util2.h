@@ -144,8 +144,7 @@ void run(const string& algo_name, vector<int>(*algorithm)(), vector<string>& fil
         int total_length = computeCost(tour);
         save(file, algo_name, tour, total_length, elapsed);
         cout << "Final tour length : " << total_length << endl;
-        cout << fixed << setprecision(6)
-             << "Elapsed time: " << elapsed.count() << " seconds\n\n";
+        cout << fixed << setprecision(6) << "Elapsed time: " << elapsed.count() << " seconds\n\n";
 
         // if (!use_2opt) continue;
 

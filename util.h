@@ -179,7 +179,6 @@ void run(const string& algo_name, vector<int>(*algorithm)(), vector<string>& fil
         save(file, algo_name + "(+2opt)", tour, total_length, elapsed, iter_2_opt);
         cout << "2-opt iterations: " << iter_2_opt << endl;
         cout << "Final tour length : " << total_length << endl;
-        cout << fixed << setprecision(6)
-             << "Elapsed time: " << elapsed.count() << " seconds\n\n";
+        cout << fixed << setprecision(6) << "Elapsed time: " << elapsed.count() << " seconds\n\n";
     }
 }
