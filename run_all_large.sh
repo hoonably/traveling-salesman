@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# C++ 설정
 CXX=clang++
 CXXFLAGS="-std=c++17 -O2"
 OUTPUT_NAME=temp_exec
 
-# C++ 소스 목록
+# Only able to O(N) space complexity
 CPP_FILES=(
   "Greedy.cpp"
   "MST_CLRS.cpp"
@@ -13,9 +12,8 @@ CPP_FILES=(
   # "MCMF_knn.cpp"
 )
 
-# C++ 컴파일 및 실행
 for file in "${CPP_FILES[@]}"; do
-  # util2로 변경해서 진행 -> 100K 이상의 입력
+  # change to util2
   TEMP_FILE="temp_$file"
   sed 's/#include "util\.h"/#include "util2.h"/' "$file" > "$TEMP_FILE"
 

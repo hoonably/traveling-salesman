@@ -13,17 +13,15 @@
 #include <iomanip>
 
 using namespace std;
+const int INF = numeric_limits<int>::max();
 
 //! Use this file for larger datasets (100K cities or more)
 // This use not dist[i][j] but get_dist(i, j) to save memory
 
-vector<string> filenames = {
-    "mona_lisa100K.tsp",
-};
-
 struct City {
     double x, y;
 };
+
 int n;
 int K = 20;
 vector<City> cities;
@@ -90,7 +88,7 @@ bool loadTSPFile(const string& filename) {
 
 void save(string filename, string algo, vector<int>& tour, int total_length, chrono::duration<double> elapsed) {
     string basename = filename.substr(0, filename.find(".tsp"));
-    string outname = "tour/" + algo + "-" + basename + ".tour";
+    string outname = "tour_paths/" + algo + "-" + basename + ".tour";
     ofstream out(outname);
 
     out << fixed << setprecision(6);  // 소수점 6자리까지 고정 소수점 출력
@@ -106,15 +104,15 @@ void save(string filename, string algo, vector<int>& tour, int total_length, chr
     out.close();
 }
 
-void run(const string& algo_name, vector<int>(*algorithm)()) {
-    for (const string& filename : filenames) {
-        if (!loadTSPFile(filename)) {
-            cout << "Skipping " << filename << " due to large size: " << n << " cities.\n";
+void run(const string& algo_name, vector<int>(*algorithm)(), vector<string>& files) {
+    for (const string& file : files) {
+        if (!loadTSPFile(file)) {
+            cout << "Skipping " << file << " due to large size: " << n << " cities.\n";
             continue;
         }
 
         cout << "Algorithm: " << algo_name << endl;
-        cout << "Dataset: " << filename << endl;
+        cout << "Dataset: " << file << endl;
 
         auto start = chrono::high_resolution_clock::now();
         vector<int> tour = algorithm();
@@ -122,12 +120,13 @@ void run(const string& algo_name, vector<int>(*algorithm)()) {
 
         chrono::duration<double> elapsed = end - start;
         int total_length = computeCost(tour);
-        save(filename, algo_name, tour, total_length, elapsed);
+        save(file, algo_name, tour, total_length, elapsed);
         cout << "Final tour length : " << total_length << endl;
         cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
 
+        // Apply 2-opt optimization
         // cout << "Algorithm: " << algo_name + "(+2opt)" << endl;
-        // cout << "Dataset: " << filename << endl;
+        // cout << "Dataset: " << file << endl;
 
         // start = chrono::high_resolution_clock::now();
         // apply_2_opt(tour);
@@ -135,7 +134,7 @@ void run(const string& algo_name, vector<int>(*algorithm)()) {
 
         // elapsed += end - start;
         // total_length = computeCost(tour);
-        // save(filename, algo_name + "(+2opt)", tour, total_length, elapsed);
+        // save(file, algo_name + "(+2opt)", tour, total_length, elapsed);
         // cout << "Final tour length : " << total_length << endl;
         // cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
     }

@@ -1,10 +1,14 @@
-#include <vector>
-#include <limits>
+//! If you want to more than 10K cities, you should use util2.h
 #include "util.h"
+// #include "util2.h"
 
-using namespace std;
-
-const int INF = numeric_limits<int>::max();
+// You should put this file in the dataset/ directory
+vector<string> files = {
+    "a280.tsp", 
+    "xql662.tsp", 
+    "kz9976.tsp", 
+    // "mona_lisa100K.tsp"
+};
 
 // Prim 알고리즘을 이용해 MST 생성
 vector<vector<int>> primMST() {
@@ -62,6 +66,7 @@ vector<int> MST_CLRS_tour() {
 }
 
 int main() {
-    run("MST_CLRS", MST_CLRS_tour);
+    bool use_2opt = true;  // 2-opt 최적화도 측정할지
+    run("MST_CLRS", MST_CLRS_tour, files, use_2opt);
     return 0;
 }

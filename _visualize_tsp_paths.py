@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import os
 
 tsp_dir = "dataset"
-tour_dir = "tour"
+tour_dir = "tour_paths"
 output_dir = "tour_image"
 os.makedirs(output_dir, exist_ok=True)
 

@@ -1,10 +1,19 @@
-#include <vector>
-#include <queue>
-#include <limits>
+//! If you want to more than 10K cities, you should use util2.h
 #include "util.h"
+// #include "util2.h"
+
+// You should put this file in the dataset/ directory
+vector<string> files = {
+    "weird20.tsp",
+    "a280.tsp", 
+    "xql662.tsp", 
+    "kz9976.tsp", 
+    // "mona_lisa100K.tsp"
+};
+
 #include "MCMF.h"
 
-// MCMF tour construction using KNN
+// MCMF tour
 vector<int> MCMF_tour(){
         MCMF mcmf;
         mcmf.init(n);
@@ -75,6 +84,7 @@ vector<int> MCMF_tour(){
 
 
 int main() {
-    run("MCMF", MCMF_tour);
+    bool use_2opt = true;  // 2-opt 최적화도 측정할지
+    run("MCMF", MCMF_tour, files, use_2opt);
     return 0;
 }
