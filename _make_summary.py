@@ -24,6 +24,7 @@ for dataset_dir in os.listdir(tour_root):
         dataset = algo = None
         length = time = None
         dimension = None
+        opt_iters = 0  # default
 
         with open(tour_path) as f:
             for line in f:
@@ -42,6 +43,11 @@ for dataset_dir in os.listdir(tour_root):
                         algo = "OPT"
                     elif "Algorithm" in content:
                         algo = content.replace("Algorithm", "").strip()
+                    elif "2-opt iterations" in content:
+                        m = re.search(r"2-opt iterations\s+(\d+)", content)
+                        if m:
+                            opt_iters = int(m.group(1))
+
                     elif "Length" in content or "length" in content or "Tour length" in content:
                         m = re.search(r"(\d+(?:\.\d+)?)", content)
                         if m:
@@ -56,8 +62,9 @@ for dataset_dir in os.listdir(tour_root):
                 "dataset": dataset,
                 "algorithm": algo,
                 "length": length,
-                "time": time,  # may be None
-                "dimension": dimension
+                "time": time,
+                "dimension": dimension,
+                "2opt_iters": opt_iters
             })
 
 if not all_data:
@@ -83,15 +90,14 @@ else:
         lambda x: f"{float(x):.6f}" if pd.notnull(x) and str(x).strip() != "" else ""
     ).astype(str)
     df["dimension"] = df["dimension"].map(lambda x: f"{int(x):d}")
+    df["2opt_iters"] = df["2opt_iters"].astype(str)
 
     # === STEP 4: Markdown 저장 ===
     table = tabulate(df, headers='keys', tablefmt='pipe', showindex=False)
     with open(os.path.join(output_dir, "summary_table.md"), "w") as f:
         f.write(table)
 
-
     # === STEP 5: CSV 저장 ===
     df.to_csv(os.path.join(output_dir, "summary_table.csv"), index=False)
 
     print("[INFO] Markdown and CSV summary tables saved to 'summary/'")
-

@@ -1,7 +1,8 @@
 NAME : weird20
 COMMENT : Algorithm Greedy(+2opt)
 COMMENT : Length 449 
-COMMENT : Elapsed time 0.000007 seconds
+COMMENT : Elapsed time 0.000014 seconds
+COMMENT : 2-opt iterations 15
 TYPE : TOUR
 DIMENSION : 20
 TOUR_SECTION

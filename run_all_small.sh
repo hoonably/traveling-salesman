@@ -24,7 +24,7 @@ done
 
 # Python 후처리 스크립트 실행
 echo "======== Running _result.py ========"
-python3 _result.py
+python3 _make_summary.py
 
 echo "======== Running _visualize_tsp_paths.py ========"
 python3 _visualize_tsp_paths.py

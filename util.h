@@ -42,9 +42,11 @@ int computeCost(vector<int>& tour) {
 }
 
 // 2-opt optimization
-void apply_2_opt(vector<int>& tour) {
+int apply_2_opt(vector<int>& tour) {
     bool improved=true;
+    int iterations = 0;
     while(improved) {
+        iterations++;
         improved=false;
         int m=tour.size();
         for(int i=0;i<m-2 && !improved;++i){
@@ -56,6 +58,7 @@ void apply_2_opt(vector<int>& tour) {
             }
         }
     }
+    return iterations;  // Return the number of iterations
 }
 
 bool loadTSPFile(const string& file) {
@@ -113,7 +116,7 @@ void create_directories(const string& path) {
     }
 }
 
-void save(string file, string algo, vector<int>& tour, int total_length, chrono::duration<double> elapsed) {
+void save(string file, string algo, vector<int>& tour, int total_length, chrono::duration<double> elapsed, int iter_2_opt = -1) {
     string basename = file.substr(0, file.find(".tsp"));
     string folder = "tour_paths/" + basename;
     string outname = folder + "/" + algo + "-" + basename + ".tour";
@@ -129,6 +132,7 @@ void save(string file, string algo, vector<int>& tour, int total_length, chrono:
     stringstream ss;
     ss << fixed << setprecision(6) << elapsed.count();
     out << "COMMENT : Elapsed time " << ss.str() << " seconds\n";
+    if (iter_2_opt >= 0) out << "COMMENT : 2-opt iterations " << iter_2_opt << "\n";
 
     out << "TYPE : TOUR\n";
     out << "DIMENSION : " << N << "\n";
@@ -167,12 +171,13 @@ void run(const string& algo_name, vector<int>(*algorithm)(), vector<string>& fil
         cout << "Dataset: " << file << endl;
 
         start = chrono::high_resolution_clock::now();
-        apply_2_opt(tour);
+        int iter_2_opt = apply_2_opt(tour);
         end = chrono::high_resolution_clock::now();
 
         elapsed += end - start;
         total_length = computeCost(tour);
-        save(file, algo_name + "(+2opt)", tour, total_length, elapsed);
+        save(file, algo_name + "(+2opt)", tour, total_length, elapsed, iter_2_opt);
+        cout << "2-opt iterations: " << iter_2_opt << endl;
         cout << "Final tour length : " << total_length << endl;
         cout << fixed << setprecision(6)
              << "Elapsed time: " << elapsed.count() << " seconds\n\n";

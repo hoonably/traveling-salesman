@@ -1,7 +1,7 @@
 NAME : kz9976
 COMMENT : Algorithm MCMF_knn(+2opt)
 COMMENT : Length 1146693 
-COMMENT : Elapsed time 309.183407 seconds
+COMMENT : Elapsed time 318.118431 seconds
 TYPE : TOUR
 DIMENSION : 9976
 TOUR_SECTION
