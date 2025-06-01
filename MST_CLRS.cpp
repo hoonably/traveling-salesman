@@ -1,4 +1,4 @@
-//! If you want to more than 10K cities, you should use util2.h
+//! For datasets over 10K cities, use "util2.h" instead
 #include "util.h"
 // #include "util2.h"
 
@@ -10,25 +10,27 @@ vector<string> files = {
     "kz9976.tsp", 
     // "mona_lisa100K.tsp"
 };
-bool use_2opt = false;  // 2-opt 최적화도 측정할지
+bool use_2opt = true;  // 2-opt 최적화도 측정할지
 
 // Prim 알고리즘을 이용해 MST 생성
 vector<vector<int>> primMST() {
-    vector<int> key(n + 1, INF);
-    vector<int> parent(n + 1, -1);
-    vector<bool> inMST(n + 1, false);
+    vector<int> key(N + 1, INF);         // 최소 비용 저장
+    vector<int> parent(N + 1, -1);       // MST에서의 부모 정점
+    vector<bool> inMST(N + 1, false);    // MST 포함 여부
 
-    key[1] = 0;
-    for (int count = 1; count <= n - 1; ++count) {
+    key[1] = 0; // 1번 도시를 시작점으로 고정
+    for (int count = 1; count <= N - 1; ++count) {
         int u = -1;
-        for (int v = 1; v <= n; ++v)
+        // MST에 포함되지 않은 정점 중 최소 key 값을 가지는 정점 선택
+        for (int v = 1; v <= N; ++v)
             if (!inMST[v] && (u == -1 || key[v] < key[u]))
                 u = v;
 
         inMST[u] = true;
-        for (int v = 1; v <= n; ++v) {
+        // u와 연결된 정점들에 대해 key 갱신
+        for (int v = 1; v <= N; ++v) {
             if (!inMST[v]) {
-                int d = get_dist(u,v);
+                int d = get_dist(u, v);
                 if (d < key[v]) {
                     key[v] = d;
                     parent[v] = u;
@@ -37,8 +39,9 @@ vector<vector<int>> primMST() {
         }
     }
 
-    vector<vector<int>> adj(n + 1);
-    for (int v = 2; v <= n; ++v) {
+    // MST를 인접 리스트 형식으로 저장
+    vector<vector<int>> adj(N + 1);
+    for (int v = 2; v <= N; ++v) {
         int u = parent[v];
         adj[u].push_back(v);
         adj[v].push_back(u);
@@ -46,7 +49,7 @@ vector<vector<int>> primMST() {
     return adj;
 }
 
-// DFS 순회로 Euler tour 생성
+// DFS 순회를 통해 Euler tour 생성
 void dfs(int u, const vector<vector<int>>& adj, vector<bool>& visited, vector<int>& tour) {
     visited[u] = true;
     tour.push_back(u);
@@ -55,15 +58,13 @@ void dfs(int u, const vector<vector<int>>& adj, vector<bool>& visited, vector<in
             dfs(v, adj, visited, tour);
 }
 
+// MST 기반 2-근사 TSP 해 찾기
 vector<int> MST_CLRS_tour() {
-    vector<vector<int>> adj = primMST();
+    vector<vector<int>> adj = primMST();            // MST 구성
     vector<int> tour;
-    vector<bool> visited(n + 1, false);
-    dfs(1, adj, visited, tour);
-    
-    // 시작점으로 돌아오기
-    tour.push_back(tour.front());
-    
+    vector<bool> visited(N + 1, false);
+    dfs(1, adj, visited, tour);                     // DFS 기반 Euler tour 생성
+    tour.push_back(tour.front());                   // 시작점으로 복귀
     return tour;
 }
 

@@ -1,7 +1,7 @@
 NAME : weird20
 COMMENT : Algorithm MCMF_knn
 COMMENT : Length 564 
-COMMENT : Elapsed time 0.000076 seconds
+COMMENT : Elapsed time 0.000085 seconds
 TYPE : TOUR
 DIMENSION : 20
 TOUR_SECTION

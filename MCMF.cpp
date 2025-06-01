@@ -1,4 +1,4 @@
-//! If you want to more than 10K cities, you should use util2.h
+//! For datasets over 10K cities, use "util2.h" instead
 #include "util.h"
 // #include "util2.h"
 
@@ -14,36 +14,39 @@ bool use_2opt = true;  // 2-opt 최적화도 측정할지
 
 #include "MCMF.h"
 
-// MCMF tour
+// MCMF 기반 TSP 근사 알고리즘
 vector<int> MCMF_tour() {
     MCMF mcmf;
-    mcmf.init(n);
+    mcmf.init(N);
 
-    for (int i = 1; i <= n; ++i) {
+    // 각 도시 → SINK, SRC → 각 도시로 이분 그래프 구성
+    for (int i = 1; i <= N; ++i) {
         mcmf.addEdge(mcmf.SRC, i, 1, 0);
         mcmf.addEdge(i + mcmf.bias, mcmf.SINK, 1, 0);
-        for (int j = 1; j <= n; ++j) {
+
+        for (int j = 1; j <= N; ++j) {
             if (i == j) continue;
-            mcmf.addEdge(i, j + mcmf.bias, 1, get_dist(i,j));
+            mcmf.addEdge(i, j + mcmf.bias, 1, get_dist(i, j));
         }
     }
 
-    auto result = mcmf.run();
+    mcmf.run();  // 최소 비용 완전 매칭 수행
 
-    vector<vector<int>> adj(n + 1);
-    for (int u = 1; u <= n; ++u) {
+    // 결과로 얻은 flow에서 실제 연결 정보 추출
+    vector<vector<int>> adj(N + 1);  // adj[u] = [v]
+    for (int u = 1; u <= N; ++u) {
         for (const auto& e : mcmf.graph[u]) {
-            if (e.cap == 0 && e.to >= mcmf.bias + 1 && e.to <= mcmf.bias + n) {
-                int from = u;
-                int to = e.to - mcmf.bias;
-                adj[from].push_back(to);
+            if (e.cap == 0 && mcmf.bias + 1 <= e.to && e.to <= mcmf.bias + N) {
+                int v = e.to - mcmf.bias;
+                adj[u].push_back(v);
             }
         }
     }
 
+    // flow 기반 edge로부터 subtour들 구성
     vector<vector<int>> subtours;
-    vector<bool> visited(n + 1, false);
-    for (int i = 1; i <= n; ++i) {
+    vector<bool> visited(N + 1, false);
+    for (int i = 1; i <= N; ++i) {
         if (!visited[i]) {
             vector<int> path;
             int cur = i;
@@ -56,6 +59,7 @@ vector<int> MCMF_tour() {
         }
     }
 
+    // 여러 개의 subtour를 단일 경로로 병합
     while (subtours.size() > 1) {
         int best_i = -1, best_j = -1, best_cost = INF;
         for (int i = 0; i < subtours.size(); ++i) {
@@ -71,23 +75,18 @@ vector<int> MCMF_tour() {
                 }
             }
         }
-        if (best_i != -1 && best_j != -1) {
-            subtours[best_i].insert(subtours[best_i].end(),
-                                    subtours[best_j].begin(),
-                                    subtours[best_j].end());
-            subtours.erase(subtours.begin() + best_j);
-        }
+        // 가장 가까운 subtour 두 개를 병합
+        vector<int>& from = subtours[best_i];
+        vector<int>& to = subtours[best_j];
+        from.insert(from.end(), to.begin(), to.end());
+        subtours.erase(subtours.begin() + best_j);
     }
 
-    if (!subtours.empty()) {
-        subtours[0].push_back(subtours[0].front()); // 시작점으로 복귀
-        return subtours[0];
-    }
-
-    return {}; // 예외 상황: 비어 있을 때
+    // 최종 투어 반환 (시작점으로 복귀)
+    vector<int>& tour = subtours[0];
+    tour.push_back(tour.front());
+    return tour;
 }
-
-
 
 int main() {
     run("MCMF", MCMF_tour, files, use_2opt);

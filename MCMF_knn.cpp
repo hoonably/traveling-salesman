@@ -1,4 +1,4 @@
-//! If you want to more than 10K cities, you should use util2.h
+//! For datasets over 10K cities, use "util2.h" instead
 #include "util.h"
 // #include "util2.h"
 
@@ -14,18 +14,20 @@ bool use_2opt = true;  // 2-opt 최적화도 측정할지
 
 #include "MCMF.h"
 
+#define K 20  // K-Nearest Neighbors 수
+
 // Get K-Nearest Neighbors for each city
 vector<vector<int>> get_knn(int k) {
-    vector<vector<int>> knn(n + 1);
-    for (int i = 1; i <= n; ++i) {
+    vector<vector<int>> knn(N + 1);
+    for (int i = 1; i <= N; ++i) {
         vector<pair<int, int>> distances; // {distance, city}
-        for (int j = 1; j <= n; ++j) {
+        for (int j = 1; j <= N; ++j) {
             if (i != j) {
                 distances.push_back({get_dist(i,j), j});
             }
         }
         sort(distances.begin(), distances.end());
-        for (int j = 0; j < min(k, (int)distances.size()); ++j) {
+        for (int j = 0; j < min(k, N-1); ++j) {
             knn[i].push_back(distances[j].second);
         }
     }
@@ -33,34 +35,36 @@ vector<vector<int>> get_knn(int k) {
 }
 
 // MCMF tour construction using KNN
-vector<int> MCMF_knn_tour(){
-    vector<vector<int>> knn = get_knn(K);
+vector<int> MCMF_knn_tour() {
+
+    vector<vector<int>> knn = get_knn(min(K,N-1));
 
     MCMF mcmf;
-    mcmf.init(n);
-    for (int i = 1; i <= n; ++i) {
+    mcmf.init(N);
+    for (int i = 1; i <= N; ++i) {
         mcmf.addEdge(mcmf.SRC, i, 1, 0);
         mcmf.addEdge(i + mcmf.bias, mcmf.SINK, 1, 0);
         for (int j : knn[i]) {
             mcmf.addEdge(i, j + mcmf.bias, 1, get_dist(i,j));
         }
     }
-    auto result = mcmf.run();
+    mcmf.run();
 
-    vector<vector<int>> adj(n + 1);
-    for (int u = 1; u <= n; ++u) {
+    // 결과로 얻은 flow에서 실제 연결 정보 추출
+    vector<vector<int>> adj(N + 1);  // adj[u] = [v]
+    for (int u = 1; u <= N; ++u) {
         for (const auto& e : mcmf.graph[u]) {
-            if (e.cap == 0 && e.to >= mcmf.bias + 1 && e.to <= mcmf.bias + n) {
-                int from = u;
-                int to = e.to - mcmf.bias;
-                adj[from].push_back(to);
+            if (e.cap == 0 && mcmf.bias + 1 <= e.to && e.to <= mcmf.bias + N) {
+                int v = e.to - mcmf.bias;
+                adj[u].push_back(v);
             }
         }
     }
 
+    // flow 기반 edge로부터 subtour들 구성
     vector<vector<int>> subtours;
-    vector<bool> visited(n + 1, false);
-    for (int i = 1; i <= n; ++i) {
+    vector<bool> visited(N + 1, false);
+    for (int i = 1; i <= N; ++i) {
         if (!visited[i]) {
             vector<int> path;
             int cur = i;
@@ -73,6 +77,7 @@ vector<int> MCMF_knn_tour(){
         }
     }
 
+    // 여러 개의 subtour를 단일 경로로 병합
     while (subtours.size() > 1) {
         int best_i = -1, best_j = -1, best_cost = INF;
         for (int i = 0; i < subtours.size(); ++i) {
@@ -88,19 +93,17 @@ vector<int> MCMF_knn_tour(){
                 }
             }
         }
-        if (best_i != -1 && best_j != -1) {
-            subtours[best_i].insert(subtours[best_i].end(),
-                                    subtours[best_j].begin(),
-                                    subtours[best_j].end());
-            subtours.erase(subtours.begin() + best_j);
-        }
+        // 가장 가까운 subtour 두 개를 병합
+        vector<int>& from = subtours[best_i];
+        vector<int>& to = subtours[best_j];
+        from.insert(from.end(), to.begin(), to.end());
+        subtours.erase(subtours.begin() + best_j);
     }
 
-    if (!subtours.empty()) {
-        subtours[0].push_back(subtours[0].front()); // 시작점 복귀
-        return subtours[0];
-    }
-    return {}; // 예외 처리
+    // 최종 투어 반환 (시작점으로 복귀)
+    vector<int>& tour = subtours[0];
+    tour.push_back(tour.front());
+    return tour;
 }
 
 

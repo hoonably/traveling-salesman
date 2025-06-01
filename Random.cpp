@@ -1,11 +1,8 @@
-//! If you want to more than 10K cities, you should use util2.h
+//! For datasets over 10K cities, use "util2.h" instead
 #include "util.h"
 // #include "util2.h"
 
 #include <random>
-
-// This file generates a random tour for TSP problems.
-// It used for 2-opt optimization without any specific algorithm.
 
 // You should put this file in the dataset/ directory
 vector<string> files = {
@@ -18,8 +15,8 @@ vector<string> files = {
 bool use_2opt = true;  // 2-opt 최적화도 측정할지
 
 vector<int> random_tour() {
-    vector<int> tour(n);
-    for (int i = 0; i < n; ++i) {
+    vector<int> tour(N);
+    for (int i = 0; i < N; ++i) {
         tour[i] = i + 1;
     }
 

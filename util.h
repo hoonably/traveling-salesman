@@ -4,20 +4,14 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <cmath>
-#include <string>
 #include <chrono>
-#include <algorithm>
-#include <queue>
 #include <iomanip>
-#include <set>
-#include <map>
-#include <limits>
-#include <filesystem>
+#include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sstream>
+#include <algorithm>
+#include <limits>
 
 using namespace std;
 const int INF = numeric_limits<int>::max();
@@ -30,8 +24,7 @@ struct City {
 };
 
 const int MAX_N = 10000;
-int n;
-int K = 20;
+int N;
 vector<City> cities;
 vector<vector<int>> dist;
 
@@ -75,8 +68,8 @@ bool loadTSPFile(const string& file) {
     string line;
     while (getline(infile, line)) {
         if (line.find("DIMENSION") != string::npos){
-            n = stoi(line.substr(line.find(":") + 1));
-            if (n > MAX_N){
+            N = stoi(line.substr(line.find(":") + 1));
+            if (N > MAX_N){
                 infile.close();
                 return false;
             }
@@ -84,10 +77,8 @@ bool loadTSPFile(const string& file) {
         if (line == "NODE_COORD_SECTION") break;
     }
 
-    if (n < 100) K = n - 1;
-
-    cities.resize(n + 1);
-    for (int i = 1; i <= n; ++i) {
+    cities.resize(N + 1);
+    for (int i = 1; i <= N; ++i) {
         int id;
         double x, y;
         infile >> id >> x >> y;
@@ -96,9 +87,9 @@ bool loadTSPFile(const string& file) {
     infile.close();
 
     // 10K 이상의 데이터는 거리 계산시 메모리 초과
-    dist.assign(n + 1, vector<int>(n + 1, 0));
-    for (int i = 1; i <= n; ++i)
-        for (int j = 1; j <= n; ++j) {
+    dist.assign(N + 1, vector<int>(N + 1, 0));
+    for (int i = 1; i <= N; ++i)
+        for (int j = 1; j <= N; ++j) {
             double dx = cities[i].x - cities[j].x;
             double dy = cities[i].y - cities[j].y;
             dist[i][j] = static_cast<int>(round(sqrt(dx * dx + dy * dy)));
@@ -140,7 +131,7 @@ void save(string file, string algo, vector<int>& tour, int total_length, chrono:
     out << "COMMENT : Elapsed time " << ss.str() << " seconds\n";
 
     out << "TYPE : TOUR\n";
-    out << "DIMENSION : " << n << "\n";
+    out << "DIMENSION : " << N << "\n";
     out << "TOUR_SECTION\n";
     for (int node : tour) out << node << "\n";
     out << "EOF\n";
@@ -151,7 +142,7 @@ void save(string file, string algo, vector<int>& tour, int total_length, chrono:
 void run(const string& algo_name, vector<int>(*algorithm)(), vector<string>& files, bool use_2opt = false) {
     for (const string& file : files) {
         if (!loadTSPFile(file)) {
-            cout << "Skipping " << file << " due to large size: " << n << " cities.\n";
+            cout << "Skipping " << file << " due to large size: " << N << " cities.\n";
             continue;
         }
 
