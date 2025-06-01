@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# C++ 설정
 CXX=clang++
 CXXFLAGS="-std=c++17 -O2"
 OUTPUT_NAME=temp_exec
 
-# C++ 소스 목록
 CPP_FILES=(
   "Greedy.cpp"
   "MST_CLRS.cpp"
@@ -14,9 +12,7 @@ CPP_FILES=(
   # "HeldKarp.cpp"
 )
 
-# C++ 컴파일 및 실행
 for file in "${CPP_FILES[@]}"; do
-  # util.h -> 100K 미만의 입력
   $CXX $CXXFLAGS "$file" -o $OUTPUT_NAME -lm
   if [ $? -ne 0 ]; then
     echo "❌ Compilation failed for original $file"
