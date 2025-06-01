@@ -1,6 +1,6 @@
 //! If you want to more than 10K cities, you should use util2.h
-// #include "util.h"
-#include "util2.h"
+#include "util.h"
+// #include "util2.h"
 
 // You should put this file in the dataset/ directory
 vector<string> files = {
@@ -10,7 +10,7 @@ vector<string> files = {
     "kz9976.tsp", 
     // "mona_lisa100K.tsp"
 };
-bool use_2opt = true;  // 2-opt 최적화도 측정할지
+bool use_2opt = false;  // 2-opt 최적화도 측정할지
 
 vector<int> Greedy_tour() {
     vector<int> tour;

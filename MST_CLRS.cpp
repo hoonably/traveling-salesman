@@ -4,12 +4,13 @@
 
 // You should put this file in the dataset/ directory
 vector<string> files = {
+    "weird20.tsp",
     "a280.tsp", 
     "xql662.tsp", 
     "kz9976.tsp", 
     // "mona_lisa100K.tsp"
 };
-bool use_2opt = true;  // 2-opt 최적화도 측정할지
+bool use_2opt = false;  // 2-opt 최적화도 측정할지
 
 // Prim 알고리즘을 이용해 MST 생성
 vector<vector<int>> primMST() {

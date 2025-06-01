@@ -1,0 +1,29 @@
+NAME : weird20
+COMMENT : Algorithm Random
+COMMENT : Length 1113 
+COMMENT : Elapsed time 0.000005 seconds
+TYPE : TOUR
+DIMENSION : 20
+TOUR_SECTION
+20
+10
+2
+12
+1
+7
+11
+17
+3
+18
+4
+8
+19
+14
+13
+16
+6
+5
+9
+15
+20
+EOF
