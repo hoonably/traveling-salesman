@@ -10,6 +10,7 @@ vector<string> files = {
     "kz9976.tsp", 
     // "mona_lisa100K.tsp"
 };
+bool use_2opt = true;  // 2-opt 최적화도 측정할지
 
 #include "MCMF.h"
 
@@ -102,7 +103,6 @@ vector<int> MCMF_knn_tour(){
 }
 
 int main() {
-    bool use_2opt = true;  // 2-opt 최적화도 측정할지
     run("MCMF_knn", MCMF_knn_tour, files, use_2opt);
     return 0;
 }

@@ -9,6 +9,7 @@ vector<string> files = {
     // "kz9976.tsp", 
     // "mona_lisa100K.tsp"
 };
+bool use_2opt = false;  // 2-opt 최적화도 측정할지
 
 using State = pair<set<int>, int>;  // (subset, last_node)
 
@@ -107,7 +108,6 @@ vector<int> HeldKarp_tour() {
 }
 
 int main() {
-    bool use_2opt = false;  // 2-opt 최적화도 측정할지
     run("HeldKarp", HeldKarp_tour, files, use_2opt);
     return 0;
 }

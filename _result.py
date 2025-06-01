@@ -80,7 +80,7 @@ else:
     # === STEP 3: 포맷 변환 ===
     df["length"] = df["length"].map(lambda x: f"{int(x):d}")
     df["time"] = df["time"].apply(
-        lambda x: f"{float(x):.10f}" if pd.notnull(x) and str(x).strip() != "" else ""
+        lambda x: f"{float(x):.6f}" if pd.notnull(x) and str(x).strip() != "" else ""
     ).astype(str)
     df["dimension"] = df["dimension"].map(lambda x: f"{int(x):d}")
 

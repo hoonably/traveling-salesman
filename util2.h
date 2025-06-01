@@ -11,6 +11,13 @@
 #include <algorithm>
 #include <queue>
 #include <iomanip>
+#include <set>
+#include <map>
+#include <limits>
+#include <filesystem>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sstream>
 
 using namespace std;
 const int INF = numeric_limits<int>::max();
@@ -86,16 +93,39 @@ bool loadTSPFile(const string& filename) {
     return true;
 }
 
-void save(string filename, string algo, vector<int>& tour, int total_length, chrono::duration<double> elapsed) {
-    string basename = filename.substr(0, filename.find(".tsp"));
-    string outname = "tour_paths/" + algo + "-" + basename + ".tour";
-    ofstream out(outname);
+void create_directories(const string& path) {
+    stringstream ss(path);
+    string segment;
+    string current_path = "";
 
-    out << fixed << setprecision(6);  // 소수점 6자리까지 고정 소수점 출력
+    while (getline(ss, segment, '/')) {
+        if (!segment.empty()) {
+            current_path += segment + "/";
+            struct stat info;
+            if (stat(current_path.c_str(), &info) != 0) {
+                mkdir(current_path.c_str(), 0777); // 상위 디렉토리 포함 생성
+            }
+        }
+    }
+}
+
+void save(string file, string algo, vector<int>& tour, int total_length, chrono::duration<double> elapsed) {
+    string basename = file.substr(0, file.find(".tsp"));
+    string folder = "tour_paths/" + basename;
+    string outname = folder + "/" + algo + "-" + basename + ".tour";
+
+    create_directories(folder);
+
+    ofstream out(outname);
+    out << fixed << setprecision(6);
     out << "NAME : " << basename << "\n";
-    out << "COMMENT : Algorithm " + algo + "\n";
+    out << "COMMENT : Algorithm " + algo << "\n";
     out << "COMMENT : Length " << total_length << " \n";
-    out << "COMMENT : Elapsed time " << elapsed.count() << " seconds\n";
+
+    stringstream ss;
+    ss << fixed << setprecision(6) << elapsed.count();
+    out << "COMMENT : Elapsed time " << ss.str() << " seconds\n";
+
     out << "TYPE : TOUR\n";
     out << "DIMENSION : " << n << "\n";
     out << "TOUR_SECTION\n";
@@ -104,7 +134,8 @@ void save(string filename, string algo, vector<int>& tour, int total_length, chr
     out.close();
 }
 
-void run(const string& algo_name, vector<int>(*algorithm)(), vector<string>& files) {
+
+void run(const string& algo_name, vector<int>(*algorithm)(), vector<string>& files, bool use_2opt = false) {
     for (const string& file : files) {
         if (!loadTSPFile(file)) {
             cout << "Skipping " << file << " due to large size: " << n << " cities.\n";
@@ -122,20 +153,24 @@ void run(const string& algo_name, vector<int>(*algorithm)(), vector<string>& fil
         int total_length = computeCost(tour);
         save(file, algo_name, tour, total_length, elapsed);
         cout << "Final tour length : " << total_length << endl;
-        cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
+        cout << fixed << setprecision(6)
+             << "Elapsed time: " << elapsed.count() << " seconds\n\n";
+
+        if (!use_2opt) continue;
 
         // Apply 2-opt optimization
-        // cout << "Algorithm: " << algo_name + "(+2opt)" << endl;
-        // cout << "Dataset: " << file << endl;
+        cout << "Algorithm: " << algo_name + "(+2opt)" << endl;
+        cout << "Dataset: " << file << endl;
 
-        // start = chrono::high_resolution_clock::now();
-        // apply_2_opt(tour);
-        // end = chrono::high_resolution_clock::now();
+        start = chrono::high_resolution_clock::now();
+        apply_2_opt(tour);
+        end = chrono::high_resolution_clock::now();
 
-        // elapsed += end - start;
-        // total_length = computeCost(tour);
-        // save(file, algo_name + "(+2opt)", tour, total_length, elapsed);
-        // cout << "Final tour length : " << total_length << endl;
-        // cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
+        elapsed += end - start;
+        total_length = computeCost(tour);
+        save(file, algo_name + "(+2opt)", tour, total_length, elapsed);
+        cout << "Final tour length : " << total_length << endl;
+        cout << fixed << setprecision(6)
+             << "Elapsed time: " << elapsed.count() << " seconds\n\n";
     }
 }

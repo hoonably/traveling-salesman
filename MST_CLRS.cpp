@@ -9,6 +9,7 @@ vector<string> files = {
     "kz9976.tsp", 
     // "mona_lisa100K.tsp"
 };
+bool use_2opt = true;  // 2-opt 최적화도 측정할지
 
 // Prim 알고리즘을 이용해 MST 생성
 vector<vector<int>> primMST() {
@@ -66,7 +67,6 @@ vector<int> MST_CLRS_tour() {
 }
 
 int main() {
-    bool use_2opt = true;  // 2-opt 최적화도 측정할지
     run("MST_CLRS", MST_CLRS_tour, files, use_2opt);
     return 0;
 }
