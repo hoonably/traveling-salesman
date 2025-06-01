@@ -1,5 +1,10 @@
-#define ALGO "MST_CLRS"
+#include <vector>
+#include <limits>
 #include "util.h"
+
+using namespace std;
+
+const int INF = numeric_limits<int>::max();
 
 // Prim 알고리즘을 이용해 MST 생성
 vector<vector<int>> primMST() {
@@ -43,53 +48,20 @@ void dfs(int u, const vector<vector<int>>& adj, vector<bool>& visited, vector<in
         if (!visited[v])
             dfs(v, adj, visited, tour);
 }
-        
+
+vector<int> MST_CLRS_tour() {
+    vector<vector<int>> adj = primMST();
+    vector<int> tour;
+    vector<bool> visited(n + 1, false);
+    dfs(1, adj, visited, tour);
+    
+    // 시작점으로 돌아오기
+    tour.push_back(tour.front());
+    
+    return tour;
+}
+
 int main() {
-    for (const string& filename : filenames) {
-        if (!loadTSPFile(filename)){
-            cout << "Skipping " << filename << " due to large size: " << n << " cities.\n";
-            continue;
-        }
-
-        // Start algorithm
-        cout << "Algorithm: " << string(ALGO) << endl;
-        cout << "Dataset: " << filename << endl;
-
-        auto start = chrono::high_resolution_clock::now();
-        //! Put algorithm here
-
-        vector<vector<int>> adj = primMST();
-        vector<int> tour;
-        vector<bool> visited(n + 1, false);
-        dfs(1, adj, visited, tour);
-        
-        //!
-        auto end = chrono::high_resolution_clock::now();
-
-        chrono::duration<double> elapsed = end - start;
-        int total_length = computeCost(tour);
-        save(filename, string(ALGO), tour, total_length, elapsed);
-        cout << fixed << setprecision(6);  // 콘솔 출력도 동일하게 설정
-        cout << "Final tour length : " << total_length << endl;
-        cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
-
-
-        // 2-opt optimization
-        cout << "Algorithm: " << string(ALGO) + "(+2opt)" << endl;
-        cout << "Dataset: " << filename << endl;
-
-        start = chrono::high_resolution_clock::now();
-
-        apply_2_opt(tour);
-
-        end = chrono::high_resolution_clock::now();
-        
-        elapsed += end - start;
-        total_length = computeCost(tour);
-        save(filename, string(ALGO)+"(+2opt)", tour, total_length, end-start);
-        cout << fixed << setprecision(6);  // 콘솔 출력도 동일하게 설정
-        cout << "Final tour length : " << total_length << endl;
-        cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
-    }
+    run("MST_CLRS", MST_CLRS_tour);
     return 0;
 }

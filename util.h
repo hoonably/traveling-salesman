@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -11,15 +13,14 @@
 #include <iomanip>
 
 using namespace std;
-#define INF 0x3f3f3f3f
 
-// Use this file for not large datasets (<= 10K cities)
+//! Use this file for not large datasets (<= 10K cities)
 // This use vector dist[i][j], so it can handle up to 10K cities.
 
 vector<string> filenames = {
     "a280.tsp", 
     "xql662.tsp", 
-    "kz9976.tsp", 
+    // "kz9976.tsp", 
 };
 
 struct City {
@@ -119,4 +120,39 @@ void save(string filename, string algo, vector<int>& tour, int total_length, chr
     for (int node : tour) out << node << "\n";
     out << "EOF\n";
     out.close();
+}
+
+void run(const string& algo_name, vector<int>(*algorithm)()) {
+    for (const string& filename : filenames) {
+        if (!loadTSPFile(filename)) {
+            cout << "Skipping " << filename << " due to large size: " << n << " cities.\n";
+            continue;
+        }
+
+        cout << "Algorithm: " << algo_name << endl;
+        cout << "Dataset: " << filename << endl;
+
+        auto start = chrono::high_resolution_clock::now();
+        vector<int> tour = algorithm();
+        auto end = chrono::high_resolution_clock::now();
+
+        chrono::duration<double> elapsed = end - start;
+        int total_length = computeCost(tour);
+        save(filename, algo_name, tour, total_length, elapsed);
+        cout << "Final tour length : " << total_length << endl;
+        cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
+
+        cout << "Algorithm: " << algo_name + "(+2opt)" << endl;
+        cout << "Dataset: " << filename << endl;
+
+        start = chrono::high_resolution_clock::now();
+        apply_2_opt(tour);
+        end = chrono::high_resolution_clock::now();
+
+        elapsed += end - start;
+        total_length = computeCost(tour);
+        save(filename, algo_name + "(+2opt)", tour, total_length, elapsed);
+        cout << "Final tour length : " << total_length << endl;
+        cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
+    }
 }

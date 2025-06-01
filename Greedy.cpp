@@ -1,5 +1,9 @@
-#define ALGO "Greedy"
+#include <vector>
+#include <limits>
 #include "util.h"
+
+using namespace std;
+#define INF 0x3f3f3f3f
 
 // 전통적인 Greedy TSP
 vector<int> greedy() {
@@ -34,48 +38,6 @@ vector<int> greedy() {
 
 
 int main() {
-    for (const string& filename : filenames) {
-        if (!loadTSPFile(filename)){
-            cout << "Skipping " << filename << " due to large size: " << n << " cities.\n";
-            continue;
-        }
-
-        // Start algorithm
-        cout << "Algorithm: " << string(ALGO) << endl;
-        cout << "Dataset: " << filename << endl;
-
-        auto start = chrono::high_resolution_clock::now();
-        //! Put algorithm here
-
-        vector<int> tour = greedy();
-        
-        //!
-        auto end = chrono::high_resolution_clock::now();
-
-        chrono::duration<double> elapsed = end - start;
-        int total_length = computeCost(tour);
-        save(filename, string(ALGO), tour, total_length, elapsed);
-        cout << fixed << setprecision(6);  // 콘솔 출력도 동일하게 설정
-        cout << "Final tour length : " << total_length << endl;
-        cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
-
-
-        // 2-opt optimization
-        cout << "Algorithm: " << string(ALGO) + "(+2opt)" << endl;
-        cout << "Dataset: " << filename << endl;
-
-        start = chrono::high_resolution_clock::now();
-
-        apply_2_opt(tour);
-
-        end = chrono::high_resolution_clock::now();
-        
-        elapsed += end - start;
-        total_length = computeCost(tour);
-        save(filename, string(ALGO)+"(+2opt)", tour, total_length, end-start);
-        cout << fixed << setprecision(6);  // 콘솔 출력도 동일하게 설정
-        cout << "Final tour length : " << total_length << endl;
-        cout << "Elapsed time: " << elapsed.count() << " seconds\n\n";
-    }
+    run("Greedy", greedy);
     return 0;
 }

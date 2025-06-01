@@ -1,7 +1,7 @@
 NAME : a280
 COMMENT : Algorithm MST_CLRS
-COMMENT : Length 3449 
-COMMENT : Elapsed time 0.000284 seconds
+COMMENT : Length 3492 
+COMMENT : Elapsed time 0.000285 seconds
 TYPE : TOUR
 DIMENSION : 280
 TOUR_SECTION
@@ -285,4 +285,5 @@ TOUR_SECTION
 269
 270
 278
+1
 EOF

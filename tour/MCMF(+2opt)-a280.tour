@@ -1,7 +1,7 @@
 NAME : a280
 COMMENT : Algorithm MCMF(+2opt)
 COMMENT : Length 2713 
-COMMENT : Elapsed time 0.001922 seconds
+COMMENT : Elapsed time 0.014205 seconds
 TYPE : TOUR
 DIMENSION : 280
 TOUR_SECTION

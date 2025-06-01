@@ -1,7 +1,7 @@
 NAME : xql662
 COMMENT : Algorithm MCMF_knn
-COMMENT : Length 3745 
-COMMENT : Elapsed time 0.025881 seconds
+COMMENT : Length 3931 
+COMMENT : Elapsed time 0.027797 seconds
 TYPE : TOUR
 DIMENSION : 662
 TOUR_SECTION
@@ -667,4 +667,5 @@ TOUR_SECTION
 502
 507
 508
+33
 EOF

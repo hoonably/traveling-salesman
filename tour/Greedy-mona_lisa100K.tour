@@ -1,7 +1,7 @@
 NAME : mona_lisa100K
 COMMENT : Algorithm Greedy
 COMMENT : Length 6846598 
-COMMENT : Elapsed time 12.219778 seconds
+COMMENT : Elapsed time 12.026058 seconds
 TYPE : TOUR
 DIMENSION : 100000
 TOUR_SECTION
