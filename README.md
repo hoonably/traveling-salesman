@@ -8,7 +8,7 @@
 ---
 
 🧠 Highlights
-<p float="left"> <img src="./tour_image/a280/MCMF_kNN(+2opt)-a280.png" alt="a280 - MCMF_kNN(+2opt)" width="48%" /> <img src="./tour_image/mona_lisa100K/MST_CLRS-mona_lisa100K.png" alt="mona_lisa100K - MST" width="48%" /> </p>
+<p float="left"> <img src="./tour_image/a280/MCMF_kNN(+2opt)-a280.png" alt="a280 - MCMF_kNN(+2opt)" width="48%" /> <img src="./tour_image/mona_lisa100K/MST-mona_lisa100K.png" alt="mona_lisa100K - MST" width="48%" /> </p>
 
 - 🧭 Exact Method: Held-Karp for small instances (n ≤ 20)
 - ⚡ Fastest Practical: Greedy + 2-opt (fast + high-quality)
