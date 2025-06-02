@@ -137,7 +137,3 @@ Use `_visualize_tsp_paths.py` to batch regenerate or customize.
 ## 📎 Reference
 
 📄 [Solving the Traveling Salesman Problem (Project Report)](./Solving_the_Traveling_Salesman_Problem.pdf)
-
----
-
-Let me know if you'd like this exported as a file or updated with new visuals.
