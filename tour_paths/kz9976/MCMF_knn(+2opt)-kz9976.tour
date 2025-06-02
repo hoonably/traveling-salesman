@@ -1,5 +1,5 @@
 NAME : kz9976
-COMMENT : Algorithm MCMF_knn(+2opt)
+COMMENT : Algorithm MCMF_kNN(+2opt)
 COMMENT : Length 1146693 
 COMMENT : Elapsed time 318.389075 seconds
 COMMENT : 2-opt iterations 6231

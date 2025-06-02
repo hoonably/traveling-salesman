@@ -6,9 +6,9 @@ OUTPUT_NAME=temp_exec
 
 CPP_FILES=(
   "Greedy.cpp"
-  "MST_CLRS.cpp"
+  "MST.cpp"
   "MCMF.cpp"
-  "MCMF_knn.cpp"
+  "MCMF_kNN.cpp"
   "HeldKarp.cpp"
 )
 

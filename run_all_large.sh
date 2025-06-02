@@ -7,9 +7,9 @@ OUTPUT_NAME=temp_exec
 # Only able to O(N) space complexity
 CPP_FILES=(
   "Greedy.cpp"
-  "MST_CLRS.cpp"
+  "MST.cpp"
   # "MCMF.cpp"
-  "MCMF_knn.cpp"
+  "MCMF_kNN.cpp"
 )
 
 for file in "${CPP_FILES[@]}"; do

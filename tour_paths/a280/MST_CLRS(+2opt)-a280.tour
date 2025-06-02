@@ -1,5 +1,5 @@
 NAME : a280
-COMMENT : Algorithm MST_CLRS(+2opt)
+COMMENT : Algorithm MST(+2opt)
 COMMENT : Length 2908 
 COMMENT : Elapsed time 0.004490 seconds
 COMMENT : 2-opt iterations 80

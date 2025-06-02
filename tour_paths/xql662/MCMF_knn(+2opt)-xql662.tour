@@ -1,5 +1,5 @@
 NAME : xql662
-COMMENT : Algorithm MCMF_knn(+2opt)
+COMMENT : Algorithm MCMF_kNN(+2opt)
 COMMENT : Length 2737 
 COMMENT : Elapsed time 0.069999 seconds
 COMMENT : 2-opt iterations 301

@@ -17,8 +17,8 @@ bool use_2opt = true;  // 2-opt 최적화도 측정할지
 #define K 20  // K-Nearest Neighbors 수
 
 // Get K-Nearest Neighbors for each city
-vector<vector<int>> get_knn(int k) {
-    vector<vector<int>> knn(N + 1);
+vector<vector<int>> get_kNN(int k) {
+    vector<vector<int>> kNN(N + 1);
     for (int i = 1; i <= N; ++i) {
         vector<pair<int, int>> distances; // {distance, city}
         for (int j = 1; j <= N; ++j) {
@@ -28,23 +28,23 @@ vector<vector<int>> get_knn(int k) {
         }
         sort(distances.begin(), distances.end());
         for (int j = 0; j < min(k, N-1); ++j) {
-            knn[i].push_back(distances[j].second);
+            kNN[i].push_back(distances[j].second);
         }
     }
-    return knn;
+    return kNN;
 }
 
-// MCMF tour construction using KNN
-vector<int> MCMF_knn_tour() {
+// MCMF tour construction using kNN
+vector<int> MCMF_kNN_tour() {
 
-    vector<vector<int>> knn = get_knn(min(K,N-1));
+    vector<vector<int>> kNN = get_kNN(min(K,N-1));
 
     MCMF mcmf;
     mcmf.init(N);
     for (int i = 1; i <= N; ++i) {
         mcmf.addEdge(mcmf.SRC, i, 1, 0);
         mcmf.addEdge(i + mcmf.bias, mcmf.SINK, 1, 0);
-        for (int j : knn[i]) {
+        for (int j : kNN[i]) {
             mcmf.addEdge(i, j + mcmf.bias, 1, get_dist(i,j));
         }
     }
@@ -108,6 +108,6 @@ vector<int> MCMF_knn_tour() {
 
 
 int main() {
-    run("MCMF_knn", MCMF_knn_tour, files, use_2opt);
+    run("MCMF_kNN", MCMF_kNN_tour, files, use_2opt);
     return 0;
 }

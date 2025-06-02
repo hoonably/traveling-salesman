@@ -59,7 +59,7 @@ void dfs(int u, const vector<vector<int>>& adj, vector<bool>& visited, vector<in
 }
 
 // MST 기반 2-근사 TSP 해 찾기
-vector<int> MST_CLRS_tour() {
+vector<int> MST_tour() {
     vector<vector<int>> adj = primMST();            // MST 구성
     vector<int> tour;
     vector<bool> visited(N + 1, false);
@@ -69,6 +69,6 @@ vector<int> MST_CLRS_tour() {
 }
 
 int main() {
-    run("MST_CLRS", MST_CLRS_tour, files, use_2opt);
+    run("MST", MST_tour, files, use_2opt);
     return 0;
 }
