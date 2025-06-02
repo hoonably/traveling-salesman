@@ -9,7 +9,7 @@ CPP_FILES=(
   "Greedy.cpp"
   "MST.cpp"
   # "MCMF.cpp"
-  "MCMF_kNN.cpp"
+  # "MCMF_kNN.cpp"
 )
 
 for file in "${CPP_FILES[@]}"; do
