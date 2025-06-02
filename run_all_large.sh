@@ -8,8 +8,8 @@ OUTPUT_NAME=temp_exec
 CPP_FILES=(
   "Greedy.cpp"
   "MST.cpp"
-  # "MCMF.cpp"
-  # "MCMF_kNN.cpp"
+  # "Flow.cpp"
+  # "Flow_kNN.cpp"
 )
 
 for file in "${CPP_FILES[@]}"; do
