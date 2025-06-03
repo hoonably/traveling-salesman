@@ -4,7 +4,9 @@ import os
 tsp_dir = "dataset"
 tour_dir = "tour_paths"
 output_dir = "tour_image"
+pdf_output_dir = "tour_image_pdf"
 os.makedirs(output_dir, exist_ok=True)
+os.makedirs(pdf_output_dir, exist_ok=True)
 
 def load_tsp_coords(tsp_path):
     coords = {}
@@ -101,12 +103,20 @@ for root, _, files in os.walk(tour_dir):
         for i, comment in enumerate(comment_lines):
             fig.text(0.01, 0.98 - i * 0.03, comment, fontsize=9, ha='left', va='top')
 
-        # 저장 경로 설정 (상대 경로 유지)
+        # 저장 경로 설정
         rel_path = os.path.relpath(tour_path, tour_dir)
-        output_path = os.path.join(output_dir, rel_path.replace(".tour", ".png"))
+        base_png_path = os.path.join(output_dir, rel_path.replace(".tour", ""))
+        base_pdf_path = os.path.join(pdf_output_dir, rel_path.replace(".tour", ""))
 
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)  # 폴더 생성
-        plt.savefig(output_path, dpi=150)
+        os.makedirs(os.path.dirname(base_png_path), exist_ok=True)
+        os.makedirs(os.path.dirname(base_pdf_path), exist_ok=True)
+
+        # PNG 저장
+        plt.savefig(base_png_path + ".png", dpi=300)
+
+        # PDF 저장 (벡터로, 다른 폴더)
+        plt.savefig(base_pdf_path + ".pdf", format='pdf')
+
         plt.close()
 
-print("[INFO] Visualized TSP paths saved to 'tour_image/'")
+print("[INFO] PNG saved to 'tour_image/', PDF saved to 'tour_image_pdf/'")
