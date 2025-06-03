@@ -30,7 +30,7 @@ vector<City> cities;
 int get_dist(int i, int j) {
     double dx = cities[i].x - cities[j].x;
     double dy = cities[i].y - cities[j].y;
-    return static_cast<int>(round(sqrt(dx * dx + dy * dy)));
+    return static_cast<int>(sqrt(dx * dx + dy * dy) + 0.5);
 }
 
 int computeCost(vector<int>& tour) {

@@ -95,7 +95,7 @@ bool loadTSPFile(const string& file) {
         for (int j = 1; j <= N; ++j) {
             double dx = cities[i].x - cities[j].x;
             double dy = cities[i].y - cities[j].y;
-            dist[i][j] = static_cast<int>(round(sqrt(dx * dx + dy * dy)));
+            dist[i][j] = static_cast<int>(sqrt(dx * dx + dy * dy) + 0.5);
         }
     return true;
 }
