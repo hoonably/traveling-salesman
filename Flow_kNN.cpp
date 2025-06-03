@@ -35,7 +35,7 @@ vector<vector<int>> get_kNN(int k) {
 }
 
 // MCMF tour construction using kNN
-vector<int> MCMF_kNN_tour() {
+vector<int> Flow_kNN_tour() {
 
     vector<vector<int>> kNN = get_kNN(min(K,N-1));
 
@@ -108,6 +108,6 @@ vector<int> MCMF_kNN_tour() {
 
 
 int main() {
-    run("MCMF_kNN", MCMF_kNN_tour, files, use_2opt);
+    run("Flow_kNN", Flow_kNN_tour, files, use_2opt);
     return 0;
 }

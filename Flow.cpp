@@ -15,7 +15,7 @@ bool use_2opt = true;  // 2-opt 최적화도 측정할지
 #include "MCMF.h"
 
 // MCMF 기반 TSP 근사 알고리즘
-vector<int> MCMF_tour() {
+vector<int> Flow_tour() {
     MCMF mcmf;
     mcmf.init(N);
 
@@ -89,6 +89,6 @@ vector<int> MCMF_tour() {
 }
 
 int main() {
-    run("MCMF", MCMF_tour, files, use_2opt);
+    run("Flow", Flow_tour, files, use_2opt);
     return 0;
 }
