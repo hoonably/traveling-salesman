@@ -2,13 +2,12 @@
 
 <a href="https://github.com/hoonably/traveling-salesman"><img src="https://img.shields.io/static/v1?label=Project&message=GitHub&color=blue"></a> <a href="./Solving_the_Traveling_Salesman_Problem.pdf"><img src="https://img.shields.io/static/v1?label=Report&message=PDF&color=red"></a>
 
-> A comparative study of exact and heuristic solutions to the symmetric metric TSP
-> 🔎 Held-Karp • 🛠 MST • 🤖 Greedy • 🔄 2-opt • 🔁 MCMF-based Heuristic
-
 ---
 
 ## 🧠 Highlights
-<p float="left"> <img src="./tour_image/a280/MCMF_kNN(+2opt)-a280.png" alt="a280 - MCMF_kNN(+2opt)" width="48%" /> <img src="./tour_image/mona_lisa100K/MST-mona_lisa100K.png" alt="mona_lisa100K - MST" width="48%" /> </p>
+<p float="left"> <img src="./tour_image/a280/Flow_kNN-a280.png" alt="Flow_kNN-a280" width="48%" /> <img src="./tour_image/a280/Flow_kNN(+2opt)-a280.png" alt="Flow_kNN(+2opt)-a280" width="48%" /> </p>
+
+<p float="left"> <img src="./tour_image/mona_lisa100K/Flow_kNN-mona_lisa100K.png" alt="Flow_kNN-mona_lisa100K" width="48%" /> <img src="./tour_image/mona_lisa100K/MST-mona_lisa100K.png" alt="MST-mona_lisa100K" width="48%" /> </p>
 
 - 🧭 Exact Method: Held-Karp for small instances (n ≤ 20)
 - ⚡ Fastest Practical: Greedy + 2-opt (fast + high-quality)
