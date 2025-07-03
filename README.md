@@ -1,6 +1,7 @@
 # 🗺️ Traveling Salesman Problem (TSP) Solver
 
-<a href="https://github.com/hoonably/traveling-salesman"><img src="https://img.shields.io/static/v1?label=Project&message=GitHub&color=blue"></a> <a href="./Solving_the_Traveling_Salesman_Problem.pdf"><img src="https://img.shields.io/static/v1?label=Report&message=PDF&color=red"></a>
+<a href="https://github.com/hoonably/traveling-salesman"><img src="https://img.shields.io/static/v1?label=Project&message=GitHub&color=blue"></a>
+<a href="https://hoonably.github.io/traveling-salesman/"><img src="https://img.shields.io/static/v1?label=Report&message=PDF&color=red"></a>
 
 ---
 
